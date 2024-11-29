@@ -13,7 +13,7 @@ const Login = () => {
       const result = await signInWithPopup(auth, provider);
       await addUserToFirestore(result.user);
       
-      navigate("/dashboard"); 
+      navigate("/Home"); 
     } catch (error) {
       console.error("Login Failed:", error.message);
     }
