@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Home from "../pages/Home";
 import Profile from "../pages/Profile";
 import PrivateRoute from "./PrivateRoute";
+import ProjectsPage from "../pages/ProjectsPage";
 import Authentication from "../pages/Authentication";
 import { useAuth } from "../context/Auth";
 const AppRoutes = () => {
@@ -26,6 +27,14 @@ const AppRoutes = () => {
               element={
                 <PrivateRoute>
                   <Profile />
+                </PrivateRoute>
+              }
+            />
+             <Route
+              path="/project"
+              element={
+                <PrivateRoute>
+                  <ProjectsPage />
                 </PrivateRoute>
               }
             />
