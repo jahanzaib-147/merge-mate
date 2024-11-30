@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "../context/AuthContext"; // Custom context for authentication
+import { useAuth } from "../context/Auth"; 
 import { Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +10,7 @@ const Home = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate("/auth"); 
+      navigate("/"); 
     } catch (error) {
       console.error("Logout Failed:", error.message);
     }

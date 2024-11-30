@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../firebase/firebase"; 
-import { addUserToFirestore } from "../../firebase/firestore"; 
+import { addUserToFirestore } from "../../firebase/firebaseHelper"; 
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 
@@ -12,8 +12,7 @@ const Login = () => {
     try {
       const result = await signInWithPopup(auth, provider);
       await addUserToFirestore(result.user);
-      
-      navigate("/Home"); 
+      navigate("/home"); 
     } catch (error) {
       console.error("Login Failed:", error.message);
     }

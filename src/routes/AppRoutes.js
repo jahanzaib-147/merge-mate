@@ -1,34 +1,38 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home"; 
-import AuthPage from "./pages/AuthPage"; 
-import Dashboard from "./pages/Dashboard"; 
-import Profile from "./pages/Profile"; 
-import PrivateRoute from "./components/PrivateRoute"; 
-
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Home from "../pages/Home";
+import Profile from "../pages/Profile";
+import PrivateRoute from "./PrivateRoute";
+import Authentication from "../pages/Authentication";
+import { useAuth } from "../context/Auth";
 const AppRoutes = () => {
+  const { user } = useAuth();
+  console.log("user", user)
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/auth" element={<AuthPage />} />
-
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
-          }
-        />
+        {user && user.accessToken ? (
+          <>
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <Home />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <Profile />
+                </PrivateRoute>
+              }
+            />
+          </>
+        ) : (
+          <Route path="/" element={<Authentication />} />
+        )}
       </Routes>
     </Router>
   );
