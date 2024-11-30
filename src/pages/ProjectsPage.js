@@ -1,14 +1,34 @@
-
 import React, { useState } from "react";
-import { Container, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Button,
+  Typography,
+} from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ProjectCard from "../components/Projects/ProjectCard";
-import SearchBar from "../components/Projects/SearchBar"
 import AddProject from "../components/Projects/AddProject";
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState([
-    { title: "React Library", description: "A UI library for React.", techStack: ["React"] },
-    { title: "AI Model", description: "AI model for data predictions.", techStack: ["Python"] },
+    {
+      title: "React Library",
+      description: "A modern UI library for React.",
+      image: "https://via.placeholder.com/300",
+      age: "1 month",
+    },
+    {
+      title: "AI Model",
+      description: "AI model for data predictions.",
+      image: "https://via.placeholder.com/300",
+      age: "2 weeks",
+    },
+    {
+      title: "E-commerce Platform",
+      description: "A platform for online shopping.",
+      image: "https://via.placeholder.com/300",
+      age: "3 months",
+    },
   ]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -20,34 +40,60 @@ const ProjectPage = () => {
     console.log("Dismissed project:", project);
   };
 
-  const handleFilter = (filters) => {
-    console.log("Filters applied:", filters);
+  const handleRefresh = () => {
+    console.log("Refreshed the project list!");
   };
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-        Project Page
-      </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setIsDrawerOpen(true)}
-        sx={{ mb: 2 }}
+    <Box>
+      <Box
+        sx={{
+          backgroundColor: "#00457C",
+          color: "#fff",
+          py: 8,
+          textAlign: "center",
+          mb: 4,
+        }}
       >
-        Add New Project
-      </Button>
-      <SearchBar onFilter={handleFilter} />
-      <ProjectCard
-        projects={projects}
-        onSwipeRight={handleSwipeRight}
-        onSwipeLeft={handleSwipeLeft}
-      />
-      <AddProject
-        open={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-      />
-    </Container>
+        <Container>
+          <Typography variant="h2" fontWeight="bold" gutterBottom>
+            Welcome to the Project Hub
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 4 }}>
+            Explore, swipe, and manage projects effortlessly.
+          </Typography>
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<AddCircleOutlineIcon />}
+            onClick={() => setIsDrawerOpen(true)}
+            sx={{
+              backgroundColor: "#FFA500",
+              "&:hover": { backgroundColor: "#FF6347" },
+            }}
+          >
+            Add New Project
+          </Button>
+        </Container>
+      </Box>
+
+      <Container>
+        <Typography variant="h4" fontWeight="500" gutterBottom>
+          Explore Projects
+        </Typography>
+        <Box sx={{ my: 4 }}>
+          <ProjectCard
+            projects={projects}
+            onSwipeRight={handleSwipeRight}
+            onSwipeLeft={handleSwipeLeft}
+            onRefresh={handleRefresh}
+          />
+        </Box>
+      </Container>
+
+      {/* Add Project Drawer */}
+      <AddProject open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
+    </Box>
   );
 };
 

@@ -52,20 +52,19 @@ export const addUserToFirestore = async (user) => {
   }
 };
 
-export const getUserProfile = async (userId) => {
+export const getUserProfile = async (uid) => {
   try {
-    const userRef = doc(db, "users", userId);
+    const userRef = doc(db, "users", uid);
     const userDoc = await getDoc(userRef);
 
-    if (userDoc.exists()) {
-      return userDoc.data(); 
-    } else {
-      console.log("No user found!");
-      return null;
+    if (!userDoc.exists()) {
+      throw new Error("User profile not found");
     }
+
+    return userDoc.data();
   } catch (error) {
-    console.error("Firestore Get User Error:", error.message);
-    throw new Error(error.message);
+    console.error("Error fetching user profile:", error);
+    throw error; 
   }
 };
 
@@ -142,7 +141,8 @@ export const getProjectTasks = async (projectId) => {
     const projectDoc = await getDoc(projectRef);
 
     if (projectDoc.exists()) {
-      return projectDoc.data().tasks || [];
+      const data = projectDoc.data();
+      return data.tasks || []; 
     } else {
       console.log("Project not found!");
       return [];
@@ -153,3 +153,36 @@ export const getProjectTasks = async (projectId) => {
   }
 };
 
+
+export const addNotification = async (userId, message) => {
+  try {
+    const notificationsRef = collection(db, "notifications");
+    await setDoc(doc(notificationsRef), {
+      userId,
+      message,
+      read: false,
+      timestamp: Date.now(),
+    });
+    console.log("Notification added");
+  } catch (error) {
+    console.error("Add Notification Error:", error.message);
+    throw new Error(error.message);
+  }
+};
+
+export const getNotifications = async (userId) => {
+  try {
+    const notificationsRef = collection(db, "notifications");
+    const querySnapshot = await getDocs(notificationsRef);
+    const notifications = [];
+    querySnapshot.forEach((doc) => {
+      if (doc.data().userId === userId) {
+        notifications.push({ id: doc.id, ...doc.data() });
+      }
+    });
+    return notifications;
+  } catch (error) {
+    console.error("Fetch Notifications Error:", error.message);
+    throw new Error(error.message);
+  }
+};

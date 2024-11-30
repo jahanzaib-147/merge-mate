@@ -4,6 +4,10 @@ import Home from "../pages/Home";
 import Profile from "../pages/Profile";
 import PrivateRoute from "./PrivateRoute";
 import ProjectsPage from "../pages/ProjectsPage";
+import NotificationsPage from "../pages/NotificationsPage";
+import TaskBoardPage from "../pages/TaskBoard";
+import About from "../pages/About";
+import Contact from "../pages/Contact";
 import Authentication from "../pages/Authentication";
 import { useAuth } from "../context/Auth";
 const AppRoutes = () => {
@@ -35,6 +39,38 @@ const AppRoutes = () => {
               element={
                 <PrivateRoute>
                   <ProjectsPage />
+                </PrivateRoute>
+              }
+            />
+             <Route
+              path="/notifications"
+              element={
+                <PrivateRoute>
+                  <NotificationsPage />
+                </PrivateRoute>
+              }
+            />
+             <Route
+              path="/task"
+              element={
+                <PrivateRoute>
+                  <TaskBoardPage />
+                </PrivateRoute>
+              }
+            />
+             <Route
+              path="/contact"
+              element={
+                <PrivateRoute>
+                  <Contact />
+                </PrivateRoute>
+              }
+            />
+             <Route
+              path="/about"
+              element={
+                <PrivateRoute>
+                  <About />
                 </PrivateRoute>
               }
             />

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { List, ListItem, ListItemText, Typography, Divider } from "@mui/material";
-import firebaseHelper from "../firebaseHelper";
-
+import { getNotifications } from "../firebase/firebaseHelper";
 const NotificationsPage = ({ userId, role }) => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      const data = await firebaseHelper.read(`notifications/${userId}`);
-      setNotifications(data || []);
+      const userNotifications = await getNotifications(userId);
+      setNotifications(userNotifications.filter((n) => !n.read));
     };
     fetchNotifications();
   }, [userId]);
