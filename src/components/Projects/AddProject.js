@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { TextField, Button, Drawer, Box, Typography } from "@mui/material";
+import { TextField, Button, Drawer, Box, Typography, MenuItem } from "@mui/material";
 import { addProject } from "../../firebase/firebaseHelper";
 
 const AddProject = ({ open, onClose }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [techStack, setTechStack] = useState("");
+  const [difficulty, setDifficulty] = useState("");
+  const [guidelines, setGuidelines] = useState("");
 
   const handleAddProject = async (e) => {
     e.preventDefault();
@@ -13,12 +15,21 @@ const AddProject = ({ open, onClose }) => {
       title,
       description,
       techStack: techStack.split(",").map((tech) => tech.trim()),
+      difficulty,
+      guidelines,
     };
-    await addProject(newProject);
-    setTitle("");
-    setDescription("");
-    setTechStack("");
-    alert("Project added successfully!");
+    try {
+      await addProject(newProject);
+      setTitle("");
+      setDescription("");
+      setTechStack("");
+      setDifficulty("");
+      setGuidelines("");
+      alert("Project added successfully!");
+    } catch (error) {
+      console.error("Error adding project:", error);
+      alert("Failed to add project. Please try again.");
+    }
   };
 
   return (
@@ -52,6 +63,28 @@ const AddProject = ({ open, onClose }) => {
             value={techStack}
             onChange={(e) => setTechStack(e.target.value)}
             margin="normal"
+          />
+          <TextField
+            label="Difficulty"
+            fullWidth
+            select
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value)}
+            margin="normal"
+            required
+          >
+            <MenuItem value="Easy">Easy</MenuItem>
+            <MenuItem value="Medium">Medium</MenuItem>
+            <MenuItem value="Hard">Hard</MenuItem>
+          </TextField>
+          <TextField
+            label="Contribution Guidelines"
+            fullWidth
+            value={guidelines}
+            onChange={(e) => setGuidelines(e.target.value)}
+            margin="normal"
+            multiline
+            rows={3}
           />
           <Button
             type="submit"

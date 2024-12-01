@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Typography, Paper, Grid } from "@mui/material";
-import { getProjectTasks, updateProjectTasks } from "../firebase/firebaseHelper";
+// import { getProjectTasks, updateProjectTasks } from "../firebase/firebaseHelper";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const TaskBoard = ({ projectId }) => {
@@ -10,13 +10,13 @@ const TaskBoard = ({ projectId }) => {
     completed: [],
   });
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const projectTasks = await getProjectTasks(projectId);
-      setTasks(projectTasks);
-    };
-    fetchTasks();
-  }, [projectId]);
+  // useEffect(() => {
+  //   const fetchTasks = async () => {
+  // //     const projectTasks = await getProjectTasks(projectId);
+  // //     setTasks(projectTasks);
+  // //   };
+  // //   fetchTasks();
+  // }, [projectId]);  
 
   const onDragEnd = async (result) => {
     if (!result.destination) return;
@@ -29,8 +29,9 @@ const TaskBoard = ({ projectId }) => {
 
     const updatedTasks = { ...tasks, [source.droppableId]: sourceList, [destination.droppableId]: destinationList };
     setTasks(updatedTasks);
-    await updateProjectTasks(projectId, updatedTasks);
+    // await updateProjectTasks(projectId, updatedTasks);
   };
+
 
   return (
     <Container>
