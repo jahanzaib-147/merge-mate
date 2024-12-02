@@ -25,11 +25,7 @@ const SearchBar = ({ onFilter }) => {
         onChange={(e) => setTechStack(e.target.value)}
         variant="outlined"
       />
-      <Button
-        onClick={handleSearch}
-        variant="contained"
-        color="primary"
-      >
+      <Button onClick={handleSearch} variant="contained" color="primary">
         Search
       </Button>
     </Box>

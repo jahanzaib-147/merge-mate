@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import ProjectCard from "./ProjectCard";
 
-const ProjectList = () => {
+const ProjectList = ({ projects }) => {
   return (
-    <div>ProjectList</div>
-  )
-}
+    <div>
+      <ProjectCard projects={projects} />
+    </div>
+  );
+};
 
-export default ProjectList
+export default ProjectList;

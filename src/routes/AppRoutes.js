@@ -51,7 +51,7 @@ const AppRoutes = () => {
               }
             />
              <Route
-              path="/task"
+              path="/Taskboard"
               element={
                 <PrivateRoute>
                   <TaskBoardPage />

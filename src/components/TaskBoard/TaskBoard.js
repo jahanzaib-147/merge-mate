@@ -12,9 +12,9 @@ const TaskBoard = ({ tasks, onTaskUpdate }) => {
     task.status = status;
     onTaskUpdate(task)
     setColumns({
-      todo: columns.todo.filter((t) => t.id !== task.id),
-      inProgress: columns.inProgress.filter((t) => t.id !== task.id),
-      completed: columns.completed.filter((t) => t.id !== task.id),
+      todo: status === "To Do" ? [...columns.todo, task] : columns.todo.filter((t) => t.id !== task.id),
+      inProgress: status === "In Progress" ? [...columns.inProgress, task] : columns.inProgress.filter((t) => t.id !== task.id),
+      completed: status === "Completed" ? [...columns.completed, task] : columns.completed.filter((t) => t.id !== task.id),
     })
   }
 

@@ -1,7 +1,8 @@
-
-import { auth, db, provider } from './firebase'; 
+import { addDoc } from "firebase/firestore";
+import { auth, db, provider, storage } from './firebase'; 
 import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { collection, doc, setDoc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export const loginWithGitHub = async () => {
   try {
@@ -79,30 +80,35 @@ export const updateUserProfile = async (userId, profileData) => {
   }
 };
 
+export const uploadFile = async (file) => {
+  const fileRef = ref(storage, `projectFiles/${file.name}`);
+  await uploadBytes(fileRef, file);
+  const downloadURL = await getDownloadURL(fileRef);
+  return downloadURL;
+};
 
-export const addProject = async (projectData) => {
+
+export const addProject = async (project) => {
   try {
-    const projectsRef = collection(db, "projects");
-    const newDocRef = await setDoc(doc(projectsRef), projectData);
-    console.log("Project Added:", newDocRef.id);
+    const docRef = await addDoc(collection(db, "projects"), project);
+    console.log("Document written with ID:", docRef.id);
+    return docRef.id;
   } catch (error) {
-    console.error("Add Project Error:", error.message);
-    throw new Error(error.message);
+    console.error("Error adding document:", error);
+    throw new Error(error.message || "Failed to add project.");
   }
 };
 
 export const getAllProjects = async () => {
   try {
-    const projectsRef = collection(db, "projects");
-    const querySnapshot = await getDocs(projectsRef);
-    const projects = [];
-    querySnapshot.forEach((doc) => {
-      projects.push({ id: doc.id, ...doc.data() });
-    });
-    return projects;
+    const querySnapshot = await getDocs(collection(db, "projects"));
+    return querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
   } catch (error) {
-    console.error("Fetch Projects Error:", error.message);
-    throw new Error(error.message);
+    console.error("Error fetching projects:", error);
+    throw new Error(error.message || "Failed to fetch projects.");
   }
 };
 
