@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Container, Typography, Paper, Grid } from "@mui/material";
 // import { getProjectTasks, updateProjectTasks } from "../firebase/firebaseHelper";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Box } from "@mui/material";
 
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 const TaskBoard = ({ projectId }) => {
   const [tasks, setTasks] = useState({
     todo: [],
     inProgress: [],
     completed: [],
   });
+  const [notifications, setNotifications] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchTasks = async () => {
-  // //     const projectTasks = await getProjectTasks(projectId);
-  // //     setTasks(projectTasks);
-  // //   };
-  // //   fetchTasks();
-  // }, [projectId]);  
+  const addNotification = (message) => {
+    setNotifications((prev) => [...prev, { id: Date.now(), message }]);
+  };
 
   const onDragEnd = async (result) => {
     if (!result.destination) return;
@@ -27,11 +25,17 @@ const TaskBoard = ({ projectId }) => {
     const [movedTask] = sourceList.splice(source.index, 1);
     destinationList.splice(destination.index, 0, movedTask);
 
-    const updatedTasks = { ...tasks, [source.droppableId]: sourceList, [destination.droppableId]: destinationList };
+    const updatedTasks = {
+      ...tasks,
+      [source.droppableId]: sourceList,
+      [destination.droppableId]: destinationList,
+    };
     setTasks(updatedTasks);
+
+    // Notify users
+    addNotification(`Task "${movedTask.title}" moved to ${destination.droppableId}`);
     // await updateProjectTasks(projectId, updatedTasks);
   };
-
 
   return (
     <Container>
@@ -70,8 +74,16 @@ const TaskBoard = ({ projectId }) => {
           ))}
         </Grid>
       </DragDropContext>
+
+      <Box sx={{ marginTop: 4 }}>
+        <Typography variant="h5">Notifications</Typography>
+        {notifications.map((note) => (
+          <Paper key={note.id} sx={{ padding: 2, marginBottom: 1 }}>
+            {note.message}
+          </Paper>
+        ))}
+      </Box>
     </Container>
   );
 };
-
-export default TaskBoard;
+export default TaskBoard
