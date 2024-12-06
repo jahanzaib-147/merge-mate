@@ -89,7 +89,8 @@ const AddProject = ({ open, onClose }) => {
       const updatedProjects = await getAllProjects();
       setProjects(updatedProjects);
     } catch (error) {
-      triggerAlert("error", `Failed to add project. Reason: ${error.message}`);
+      console.error("Error adding project:", error);
+      triggerAlert("error", `Failed to add project. Reason: ${error.message || "Unknown error"}`);
     }
   };
 
@@ -159,16 +160,18 @@ const AddProject = ({ open, onClose }) => {
             }}
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleFileDrop}
+            onClick={() => document.getElementById("file-input").click()}
           >
             <Typography variant="body2" color="textSecondary">
               Drag and drop files here or click to upload
             </Typography>
           </Box>
           <input
+            id="file-input"
             type="file"
             multiple
+            style={{ display: "none" }}
             onChange={handleFileChange}
-            style={{ marginTop: "10px" }}
           />
           {files.length > 0 && (
             <Typography variant="body2" sx={{ mt: 2 }}>

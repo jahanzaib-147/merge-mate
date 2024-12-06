@@ -8,6 +8,7 @@ import NotificationsPage from "../pages/NotificationsPage";
 import TaskBoardPage from "../pages/TaskBoard";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
+import ProjectOwner from "../components/Projects/Ownerinfo/productOwner";
 import Authentication from "../pages/Authentication";
 import { useAuth } from "../context/Auth";
 const AppRoutes = () => {
@@ -72,6 +73,17 @@ const AppRoutes = () => {
                 <PrivateRoute>
                   <About />
                 </PrivateRoute>
+                
+              }
+            />
+              
+             <Route
+              path="/Ownerinfo"
+              element={
+                <PrivateRoute>
+                  <ProjectOwner />
+                </PrivateRoute>
+                
               }
             />
           </>

@@ -141,23 +141,23 @@ export const updateProjectTasks = async (projectId, taskData) => {
   }
 };
 
-export const getProjectTasks = async (projectId) => {
-  try {
-    const projectRef = doc(db, "projects", projectId);
-    const projectDoc = await getDoc(projectRef);
+// export const getProjectTasks = async (projectId) => {
+//   try {
+//     const projectRef = doc(db, "projects", projectId);
+//     const projectDoc = await getDoc(projectRef);
 
-    if (projectDoc.exists()) {
-      const data = projectDoc.data();
-      return data.tasks || []; 
-    } else {
-      console.log("Project not found!");
-      return [];
-    }
-  } catch (error) {
-    console.error("Fetch Project Tasks Error:", error.message);
-    throw new Error(error.message);
-  }
-};
+//     if (projectDoc.exists()) {
+//       const data = projectDoc.data();
+//       return data.tasks || []; 
+//     } else {
+//       console.log("Project not found!");
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error("Fetch Project Tasks Error:", error.message);
+//     throw new Error(error.message);
+//   }
+// };
 
 
 export const addNotification = async (userId, message) => {

@@ -103,4 +103,18 @@ const Notifications = () => {
   );
 };
 
-export default Notifications;
+# Initialize a new Git repository
+git init
+
+# Add all files to the repository
+git add .
+
+# Commit the changes
+git commit -m "Initial commit"
+
+# Create a new repository on GitHub using the GitHub CLI
+gh repo create <repository-name> --public --source=. --remote=origin
+
+# Push the changes to the new GitHub repository
+git push -u origin main
+
