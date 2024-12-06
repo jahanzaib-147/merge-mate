@@ -4,8 +4,10 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
-
-import { Navigation, Pagination, EffectCoverflow } from "swiper/modules";
+import "swiper/css/effect-fade";
+import "swiper/css/effect-cube";
+import "swiper/css/effect-flip";
+import { Navigation, Pagination, EffectCoverflow, EffectFade, EffectCube, EffectFlip } from "swiper";
 import {
   Card,
   CardMedia,

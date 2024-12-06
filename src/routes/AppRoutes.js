@@ -78,7 +78,7 @@ const AppRoutes = () => {
             />
               
              <Route
-              path="/Ownerinfo"
+              path="/Ownerinfo/productOwner"
               element={
                 <PrivateRoute>
                   <ProjectOwner />

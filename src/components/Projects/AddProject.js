@@ -29,6 +29,7 @@ const AddProject = ({ open, onClose }) => {
         setProjects(fetchedProjects);
       } catch (error) {
         console.error("Error fetching projects:", error);
+        triggerAlert("error", "Error fetching projects: " + error.message);
         triggerAlert("error", "Failed to fetch projects. Please check your connection.");
       }
     };
@@ -207,3 +208,4 @@ const AddProject = ({ open, onClose }) => {
 };
 
 export default AddProject;
+

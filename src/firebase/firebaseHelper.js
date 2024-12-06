@@ -1,8 +1,26 @@
-import { addDoc } from "firebase/firestore";
-import { auth, db, provider, storage } from './firebase'; 
-import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
-import { collection, doc, setDoc, getDoc, getDocs, updateDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { 
+  getFirestore, 
+  collection, 
+  doc, 
+  addDoc, 
+  setDoc, 
+  getDoc, 
+  getDocs, 
+  updateDoc, 
+  query, 
+  where 
+} from "firebase/firestore";
+import { 
+  getAuth, 
+  GithubAuthProvider, 
+  signInWithPopup, 
+  signOut, 
+  onAuthStateChanged 
+} from "firebase/auth";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { auth, db, storage, provider } from "./firebase"; // Ensure correct imports
+
+// -------- AUTHENTICATION -------- //
 
 export const loginWithGitHub = async () => {
   try {
@@ -31,6 +49,7 @@ export const monitorAuthState = (callback) => {
   });
 };
 
+// -------- FIRESTORE USER MANAGEMENT -------- //
 
 export const addUserToFirestore = async (user) => {
   try {
@@ -42,8 +61,8 @@ export const addUserToFirestore = async (user) => {
         name: user.displayName,
         email: user.email,
         profilePic: user.photoURL,
-        techStack: [], 
-        experience: "Beginner", 
+        techStack: [], // Example custom data
+        experience: "Beginner", // Default value
       });
       console.log("User added to Firestore");
     }
@@ -80,13 +99,7 @@ export const updateUserProfile = async (userId, profileData) => {
   }
 };
 
-export const uploadFile = async (file) => {
-  const fileRef = ref(storage, `projectFiles/${file.name}`);
-  await uploadBytes(fileRef, file);
-  const downloadURL = await getDownloadURL(fileRef);
-  return downloadURL;
-};
-
+// -------- PROJECT MANAGEMENT -------- //
 
 export const addProject = async (project) => {
   try {
@@ -129,7 +142,6 @@ export const getProjectDetails = async (projectId) => {
   }
 };
 
-
 export const updateProjectTasks = async (projectId, taskData) => {
   try {
     const projectRef = doc(db, "projects", projectId);
@@ -141,29 +153,30 @@ export const updateProjectTasks = async (projectId, taskData) => {
   }
 };
 
-// export const getProjectTasks = async (projectId) => {
-//   try {
-//     const projectRef = doc(db, "projects", projectId);
-//     const projectDoc = await getDoc(projectRef);
+export const getProjectTasks = async (projectId) => {
+  try {
+    const projectRef = doc(db, "projects", projectId);
+    const projectDoc = await getDoc(projectRef);
 
-//     if (projectDoc.exists()) {
-//       const data = projectDoc.data();
-//       return data.tasks || []; 
-//     } else {
-//       console.log("Project not found!");
-//       return [];
-//     }
-//   } catch (error) {
-//     console.error("Fetch Project Tasks Error:", error.message);
-//     throw new Error(error.message);
-//   }
-// };
+    if (projectDoc.exists()) {
+      const data = projectDoc.data();
+      return data.tasks || []; // Default to empty array if no tasks
+    } else {
+      console.log("Project not found!");
+      return [];
+    }
+  } catch (error) {
+    console.error("Fetch Project Tasks Error:", error.message);
+    throw new Error(error.message);
+  }
+};
 
+// -------- NOTIFICATION MANAGEMENT -------- //
 
 export const addNotification = async (userId, message) => {
   try {
     const notificationsRef = collection(db, "notifications");
-    await setDoc(doc(notificationsRef), {
+    await addDoc(notificationsRef, {
       userId,
       message,
       read: false,
@@ -179,16 +192,37 @@ export const addNotification = async (userId, message) => {
 export const getNotifications = async (userId) => {
   try {
     const notificationsRef = collection(db, "notifications");
-    const querySnapshot = await getDocs(notificationsRef);
-    const notifications = [];
-    querySnapshot.forEach((doc) => {
-      if (doc.data().userId === userId) {
-        notifications.push({ id: doc.id, ...doc.data() });
-      }
-    });
+    const q = query(notificationsRef, where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+    const notifications = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     return notifications;
   } catch (error) {
     console.error("Fetch Notifications Error:", error.message);
     throw new Error(error.message);
+  }
+};
+
+// -------- FILE UPLOAD -------- //
+
+export const uploadFile = async (file) => {
+  try {
+    const fileRef = ref(storage, `projectFiles/${file.name}`);
+    await uploadBytes(fileRef, file);
+    const downloadURL = await getDownloadURL(fileRef);
+    return downloadURL;
+  } catch (error) {
+    console.error("File Upload Error:", error.message);
+    throw new Error(error.message || "Failed to upload file.");
+  }
+};
+
+export const testFirestoreAccess = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "projects"));
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id, "=>", doc.data());
+    });
+  } catch (error) {
+    console.error("Error fetching projects:", error.message);
   }
 };
